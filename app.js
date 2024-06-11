@@ -68,10 +68,10 @@ app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 // app.use(cookieParser());
 
-// app.get("/", (req,res) => {
-//     // res.send("Hi, I am root.")
-//     res.redirect("/listings")
-// });
+app.get("/", (req,res) => {
+    // res.send("Hi, I am root.")
+    res.redirect("/listings")
+});
 
 app.use(session(sessionOptions));  //express-session
 app.use(flash());  //connect-flash
