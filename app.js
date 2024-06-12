@@ -1,4 +1,4 @@
-if(process.env.NODE_ENV != "production"){
+if (process.env.NODE_ENV != "production") {
     require('dotenv').config();
 }
 
@@ -41,7 +41,7 @@ const store = MongoStore.create({
     crypto: {
         secret: process.env.SECRET,
     },
-    touchAfter: 24*3600,
+    touchAfter: 24 * 3600,
 });
 
 store.on("error", () => {
@@ -62,16 +62,11 @@ const sessionOptions = {
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 // app.use(cookieParser());
-
-app.get("/", (req,res) => {
-    // res.send("Hi, I am root.")
-    res.redirect("/listings")
-});
 
 app.use(session(sessionOptions));  //express-session
 app.use(flash());  //connect-flash
@@ -93,32 +88,22 @@ app.use((req, res, next) => {
     next();
 })
 
-// app.get("/demouser", async (req, res) => {
-//     let fakeUser = new User({
-//         email: "student@gmail.com",
-//         username: "siddhaartha",
-//     });
-
-//     let registeredUser = await User.register(fakeUser, "Password")
-//     res.send(registeredUser);
-// });
+app.get("/", (req, res) => {
+    // res.send("Hi, I am root.")
+    res.redirect("/listings")
+});
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
 
-// //404 
-// app.use((req,res) => {
-//     res.send("Page not found!");
-// });
-
 app.all("*", (req, res, next) => {
     next(new ExpressError(404, "Page not found!"))
 })
 
 app.use((err, req, res, next) => {
-    let { statusCode = 500, message = "Something went wrong!"} = err;
+    let { statusCode = 500, message = "Something went wrong!" } = err;
     res.status(statusCode).render("listings/error.ejs", { err });
     // res.status(statusCode).send(message);
 });
